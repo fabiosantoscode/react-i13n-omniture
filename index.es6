@@ -1,97 +1,99 @@
-/* eslint-disable id-match, id-short, id-length, no-undef */
-import { assign } from 'lodash';
 import promisescript from 'promisescript';
-// Customisation of the script to keep the plugin reusable.
-import config from './config';
+export class OminturePlugin {
 
-export default {
-  name: 'omniture',
-  eventHandlers: {
-    /* eslint-disable no-unused-vars */
-    pageview(payload, callback) {
-      // We can manipulate props here.
-      const nodeProps = payload.i13nNode.getMergedModel();
-      // Then send the manipulated data to Omniture.
-      nodeProps.action = 'pageview';
-      nodeProps.page = payload.page;
-      this.tracking(nodeProps);
-    },
-    click(payload, callback) {
-      // Get the props from the node
-      if (payload.i13nNode) {
-        let nodeProps = payload.i13nNode.getMergedModel();
-        // We can manipulate props here using functions customised in the config
-        // file.
-        console.log('Pre-manipulated parameters', nodeProps);
-        if(config.eventHandlers.click){
-          nodeProps = config.eventHandlers.click(nodeProps);
+  constructor(config) {
+    this.config = config;
+  }
+
+  get eventHandlers() {
+    return {
+      click: this.clickEvent.bind(this),
+      pageview: this.pageviewEvent.bind(this),
+    };
+  }
+
+  ensureScriptHasLoaded() {
+    if (!this.script) {
+      this.script = this.scriptpromisescript({
+        url: config.externalScript,
+        type: 'script',
+      }).then(() => {
+        if (typeof window === 'undefined' || !window.s_gi) {
+          return false;
         }
-        // Then send to Omniture
-        this.tracking(nodeProps);
-      } else {
-        return callback();
-      }
-    },
-  },
-  tracking(trackedProps) {
-    // Currently it works only clientside.
-    // I don't see any reason to use server-side at the moment.
-    if (typeof window !== 'undefined') {
-      if (this.scriptLoaded) {
-        // Script has been already downloaded, we can send tracking metrics.
-        this.sendTracking(trackedProps);
-      } else {
-        // First call, be sure to download the omniture code.
-        this.initTracking(trackedProps);
-      }
-    }
-  },
-  initTracking(trackedProps) {
-    const self = this;
-    // Use an internal cache to store multiples events that can happens before
-    // the script is loaded.
-    self.pendingRequests.push(trackedProps);
-    // Async load of the necessary script.
-    self.loadExternalScript().then(() => {
-      self.scriptLoaded = true;
-      // Send all the pending request.
-      self.pendingRequests.map((request) => {
-        self.sendTracking(request);
+        const props = {};
+        for (let i = 1; i < 50; ++i) {
+          props['prop' + i] = '';
+        }
+        this.trackingObject = assign({}, window.s_gi(this.account), this.config.initialConfig);
       });
-      // Clear the cache.
-      self.pendingRequests = [];
-    }).catch((e) => {
-      console.error('An error loading or executing Omniture has occured: ', e.message);
-    });
-  },
-  loadExternalScript() {
-    // Currently using a pure version of the Omniture script, without logic.
-    return promisescript({
-      url: config.externalScript,
-      type: 'script',
-    });
-  },
-  sendTracking(trackedProps) {
-    console.log('SendTracking received', trackedProps);
-    if (window.s_gi) {
-      window.s = window.s_gi((process.env.NODE_ENV === 'production') ? 'economistcomprod' : 'economistcomdev');
-      // Instead of using InitialProps we could freeze the immutable properties
-      // that we want prevent to change.
-      window.s = assign(window.s, config.initialProps, trackedProps);
-      let omnitureTrackingCode = null;
-      if (trackedProps.action === 'pageview') {
-        console.log('Tracking pageview');
-        omnitureTrackingCode = window.s.t();
-      } else {
-        console.log('Tracking link');
-        // s.tl() will receive some arguments TBD.
-        omnitureTrackingCode = window.s.tl();
-      }
-      if (omnitureTrackingCode) {
-        document.write(omnitureTrackingCode);
-      }
     }
-  },
-  scriptLoaded: false,
-  pendingRequests: [],
+    return this.script;
+  }
+
+  generatePayload(payload, eventName) {
+    const eventHandler = this.config.eventHandlers[eventName];
+    let props = {};
+    if (payload && payload.i13nNode && payload.i13nNode.getMergedModel) {
+      props = payload.i13nNode.getMergedModel();
+    }
+    if (eventHandler) {
+      return eventHandler(props);
+    }
+    return props;
+  }
+
+  /* eslint-disable no-unused-vars */
+  pageview(payload, callback) {
+    return this.ensureScriptHasLoaded().then(() => (
+      this.track(this.generatePayload(payload, 'pageview'), callback)
+    ));
+  }
+
+  click(payload, callback) {
+    return this.ensureScriptHasLoaded().then(() => (
+      this.trackLink(this.generatePayload(payload, 'click'), callback)
+    ));
+  }
+
+  track(additionalTrackingProps, callback) {
+    this.sendTracking(additionalTrackingProps);
+    const newTrackingObject = {
+      ...this.trackingObject,
+      ...additionalTrackingProps
+    };
+    // `tl` is Omniture's TrackLink function.
+    const omnitureTrackingPixel = newTrackingObject.t();
+    if (omnitureTrackingPixel && typeof window !== 'undefined' && window.document) {
+      window.document.write(omnitureTrackingPixel);
+    }
+    const promise = Promise.resolve();
+    if (callback) {
+      promise.then(callback);
+    }
+    return promise;
+  }
+
+  trackLink(additionalTrackingProps, callback) {
+    return new Promise((resolve) => {
+      const newTrackingObject = ({
+        ...this.trackingObject,
+        ...additionalTrackingProps
+      });
+      // `tl` is Omniture's TrackLink function.
+      newTrackingObject.tl(
+        true,
+        newTrackingObject.linkType,
+        newTrackingObject.linkName,
+        newTrackingObject.variableOverrides,
+        () => {
+          if (callback) {
+            callback();
+          }
+          resolve();
+        },
+      );
+    });
+  }
+
 };
