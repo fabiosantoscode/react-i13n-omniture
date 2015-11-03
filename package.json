@@ -15,6 +15,7 @@
   "main": "index.js",
   "files": [
     "*.js",
+    "*.es6",
     "*.css",
     "assets/*",
     "!karma.conf.js",
@@ -26,7 +27,7 @@
     ]
   },
   "babel": {
-    "stage": 1,
+    "stage": 0,
     "loose": "all",
     "compact": false
   },
@@ -109,7 +110,7 @@
     "doc": "parallelshell 'npm run doc:html' 'npm run doc:js' 'npm run doc:css'",
     "doc:css": "cssnext --sourcemap example.css bundle.css",
     "doc:css:watch": "npm run doc:css -- --watch",
-    "doc:html": "devpack-doc index standalone",
+    "doc:html": "npm-assets . && devpack-doc index standalone",
     "doc:html:watch": "npm-watch",
     "doc:js": "npm run prepublish && browserify -d $npm_package_config_testbundle_opts",
     "doc:js:watch": "watchify $npm_package_config_testbundle_opts",
@@ -117,13 +118,16 @@
     "lint": "eslint $npm_package_config_lint_opts .",
     "pages": "git stash save -u pages-stash && git branch -D gh-pages; git checkout --orphan gh-pages && git add -f $npm_package_config_ghpages_files && git commit -anm'ghpages' && git push origin HEAD:gh-pages -f",
     "prepages": "npm run doc",
-    "prepublish": "babel . -d . -x .es6",
+    "prepublish": "babel . -d . -x .es6 --ignore node_modules",
     "prepublish:watch": "npm run prepublish -- -w",
     "pretest": "npm run lint",
     "provision": "devpack-configure ./package.json",
     "serve": "browser-sync start --server --files '*.{html,js}'",
     "test": "karma start",
     "watch": "parallelshell 'npm run doc:watch' 'npm run prepublish:watch' 'npm run serve'"
+  },
+  "dependencies": {
+    "promisescript": "^1.1.0"
   },
   "devDependencies": {
     "@economist/component-devpack": "^3.4.3",
@@ -140,23 +144,23 @@
     "eslint-config-strict-react": "^2.0.0",
     "eslint-plugin-filenames": "^0.1.2",
     "eslint-plugin-react": "^3.3.1",
+    "karma": "^0.13.10",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^0.2.0",
     "karma-sauce-launcher": "^0.2.14",
     "mocha": "^2.2.5",
+    "npm-assets": "^0.1.0",
     "npm-watch": "0.0.1",
     "parallelshell": "^2.0.0",
     "pre-commit": "^1.0.10",
+    "react": "^0.14.0",
     "watchify": "^3.4.0"
+  },
+  "peerDependencies": {
+    "react": "^0.14.0",
+    "react-i13n": "^0.2.0-rc1"
   },
   "pre-commit": [
     "lint"
-  ],
-  "dependencies": {
-    "lodash": "^3.10.1",
-    "promisescript": "^1.1.0"
-  },
-  "peerDependencies": {
-    "react-i13n": "^0.2.0-rc1"
-  }
+  ]
 }

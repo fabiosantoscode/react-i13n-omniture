@@ -46,6 +46,13 @@ const TrackedApp = setupI13n(DemoApp, {
         prop3: nodeProps.element,
       };
     },
+    pageview: (nodeProps) => {
+      // Just a fake manipulation
+      return {
+        prop13: nodeProps.product,
+        prop3: nodeProps.element,
+      };
+    },
   },
 }) ]);
 export default(<TrackedApp/>);

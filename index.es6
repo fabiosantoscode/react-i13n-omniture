@@ -1,5 +1,5 @@
 import promisescript from 'promisescript';
-export class OminturePlugin {
+export default class OminturePlugin {
 
   constructor(config) {
     this.config = config;
@@ -7,15 +7,15 @@ export class OminturePlugin {
 
   get eventHandlers() {
     return {
-      click: this.clickEvent.bind(this),
-      pageview: this.pageviewEvent.bind(this),
+      click: this.click.bind(this),
+      pageview: this.pageview.bind(this),
     };
   }
 
   ensureScriptHasLoaded() {
     if (!this.script) {
-      this.script = this.scriptpromisescript({
-        url: config.externalScript,
+      this.script = promisescript({
+        url: this.config.externalScript,
         type: 'script',
       }).then(() => {
         if (typeof window === 'undefined' || !window.s_gi) {
@@ -25,7 +25,12 @@ export class OminturePlugin {
         for (let i = 1; i < 50; ++i) {
           props['prop' + i] = '';
         }
-        this.trackingObject = assign({}, window.s_gi(this.account), this.config.initialConfig);
+        this.trackingObject = {
+          ...window.s_gi(this.config.account),
+          ...this.config.initialConfig
+        };
+      }).catch(function(e) {
+        console.error('An error loading or executing Omniture has occured: ', e.message);
       });
     }
     return this.script;
@@ -62,7 +67,7 @@ export class OminturePlugin {
       ...this.trackingObject,
       ...additionalTrackingProps
     };
-    // `tl` is Omniture's TrackLink function.
+    // `t` is Omniture's Track function.
     const omnitureTrackingPixel = newTrackingObject.t();
     if (omnitureTrackingPixel && typeof window !== 'undefined' && window.document) {
       window.document.write(omnitureTrackingPixel);
