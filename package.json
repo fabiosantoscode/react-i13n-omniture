@@ -148,6 +148,7 @@
     "karma-chai": "^0.1.0",
     "karma-mocha": "^0.2.0",
     "karma-sauce-launcher": "^0.2.14",
+    "lodash.assign": "^3.2.0",
     "mocha": "^2.2.5",
     "npm-assets": "^0.1.0",
     "npm-watch": "0.0.1",

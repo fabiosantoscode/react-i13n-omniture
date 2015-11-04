@@ -1,4 +1,6 @@
 import promisescript from 'promisescript';
+import assign from 'lodash.assign';
+
 export default class OminturePlugin {
 
   constructor(config) {
@@ -25,10 +27,10 @@ export default class OminturePlugin {
         for (let i = 1; i < 50; ++i) {
           props['prop' + i] = '';
         }
-        this.trackingObject = {
-          ...window.s_gi(this.config.account),
-          ...this.config.initialConfig
-        };
+        this.trackingObject = assign(
+          window.s_gi(this.config.account),
+          this.config.initialConfig
+        );
       }).catch(function(e) {
         console.error('An error loading or executing Omniture has occured: ', e.message);
       });
@@ -62,11 +64,10 @@ export default class OminturePlugin {
   }
 
   track(additionalTrackingProps, callback) {
-    this.sendTracking(additionalTrackingProps);
-    const newTrackingObject = {
-      ...this.trackingObject,
-      ...additionalTrackingProps
-    };
+    const newTrackingObject = assign(
+      this.trackingObject,
+      additionalTrackingProps
+    );
     // `t` is Omniture's Track function.
     const omnitureTrackingPixel = newTrackingObject.t();
     if (omnitureTrackingPixel && typeof window !== 'undefined' && window.document) {
@@ -81,10 +82,10 @@ export default class OminturePlugin {
 
   trackLink(additionalTrackingProps, callback) {
     return new Promise((resolve) => {
-      const newTrackingObject = ({
-        ...this.trackingObject,
-        ...additionalTrackingProps
-      });
+      const newTrackingObject = (assign(
+        this.trackingObject,
+        additionalTrackingProps
+      ));
       // `tl` is Omniture's TrackLink function.
       newTrackingObject.tl(
         true,
