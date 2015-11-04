@@ -82,11 +82,12 @@ export default class OminturePlugin {
 
   trackLink(additionalTrackingProps, callback) {
     return new Promise((resolve) => {
-      const newTrackingObject = (assign(
+      const newTrackingObject = assign(
         this.trackingObject,
         additionalTrackingProps
-      ));
+      );
       // `tl` is Omniture's TrackLink function.
+      // TODO: linkType and linkName are mandatory, pls add a check.
       newTrackingObject.tl(
         true,
         newTrackingObject.linkType,

@@ -42,8 +42,8 @@ const TrackedApp = setupI13n(DemoApp, {
     click: (nodeProps) => {
       // Just a fake manipulation
       return {
-        prop13: nodeProps.product,
-        prop3: nodeProps.element,
+        linkType: nodeProps.product,
+        linkName: nodeProps.element,
       };
     },
     pageview: (nodeProps) => {
