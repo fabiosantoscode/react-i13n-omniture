@@ -26,7 +26,9 @@ export default class DemoApp extends React.Component {
 
   componentWillMount() {
     this.props.i13n.executeEvent('pageview', {
-      page: 'Just a fake pageview',
+      title: 'Title of the article',
+      template: 'article',
+      topic: 'Science',
     });
   }
 

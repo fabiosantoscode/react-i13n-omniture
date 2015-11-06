@@ -1,11 +1,35 @@
+// Pagename
+// All page names should follow the same format
+// <product>|<template>|<topic_category>|<title>
+// the_work_if|<template>|<topic_category>|<title>
+// eg —
+// "homepage" becomes "the_world_if|section||home" (NOT homepage)
+// (note when there is not topic it is left blank but both pipes are there.
+// --> "the_world_if|article|politics|the_peril_beyond_putin"
+// prop1 is "the_world_if" for all pages (currently the world if section page prop 1 has "homepage"
+// prop 2 should have issue date in the format of the rest of the site.
+// prop3 is web
+// prop4 - homepage should be "section|home"
+// prop5 ONLY populates for content - articles, blogs, graphs, etc. Not for home page.
+// Is prop 13 can be populated it would be helpful to overall tracking. this is the cookie reading to identify who users on the site are.
+
+// Formatting
+// String
+// no spaces, caps or special characters
+// Date
+// the_world_if_yyyymmdd
+
 /* eslint-disable id-match, id-length */
 import React from 'react';
 import { setupI13n } from 'react-i13n';
 import ReactI13nOmniture from './index';
 import DemoApp from './demoapp';
+import slug from 'slug';
+import User from '@economist/user';
+let user = new User();
 const TrackedApp = setupI13n(DemoApp, {
   rootModelData: {
-    product: 'Demo App',
+    product: 'The World If',
   },
   isViewportEnabled: true,
 }, [ new ReactI13nOmniture({
@@ -34,6 +58,7 @@ const TrackedApp = setupI13n(DemoApp, {
       'prop46',
       'contextData.subsection',
     ].join(''),
+    // prop3 is web
     prop3: 'web',
   },
   // Set the URL of the Omniture script you want to use.
@@ -47,10 +72,34 @@ const TrackedApp = setupI13n(DemoApp, {
       };
     },
     pageview: (nodeProps) => {
-      // Just a fake manipulation
+      // World In configuration
+      // prop1 is "the_world_if" for all pages (currently the world if section page prop 1 has "homepage"
+      // prop 2 should have issue date in the format of the rest of the site.
+      // prop3 is web
+      // prop4 - homepage should be "section|home"
+      // prop5 ONLY populates for content - articles, blogs, graphs, etc. Not for home page.
+      // Is prop 13 can be populated it would be helpful to overall tracking. this is the cookie reading to identify who users on the site are.
+
+      // template: 'article' or 'section|home'
+      // topic: e.g. 'Politics';
+
+      // Enforce with default values for nodeProps
+      nodeProps = {
+        product: '',
+        topic: '',
+        title: '',
+        template: '',
+        ...nodeProps,
+      }
       return {
-        prop13: nodeProps.product,
-        prop3: nodeProps.element,
+        pageName: [ slug(nodeProps.product), slug(nodeProps.topic), slug(nodeProps.title) ].join('|'),
+        pageURL: location.href,
+        prop1: slug(nodeProps.product),
+        prop4: slug(nodeProps.template),
+        prop5: nodeProps.title,
+        prop11: user.isLoggedIn() ? "logged_in" : "not_logged_in",
+        prop12: user.isLoggedIn(),
+        prop32: location.href,
       };
     },
   },

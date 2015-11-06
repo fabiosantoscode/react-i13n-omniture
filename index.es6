@@ -42,7 +42,7 @@ export default class OminturePlugin {
     const eventHandler = this.config.eventHandlers[eventName];
     let props = {};
     if (payload && payload.i13nNode && payload.i13nNode.getMergedModel) {
-      props = payload.i13nNode.getMergedModel();
+      props = assign(payload, payload.i13nNode.getMergedModel());
     }
     if (eventHandler) {
       return eventHandler(props);
@@ -68,6 +68,7 @@ export default class OminturePlugin {
       this.trackingObject,
       additionalTrackingProps
     );
+    console.log("Page view", newTrackingObject);
     // `t` is Omniture's Track function.
     const omnitureTrackingPixel = newTrackingObject.t();
     if (omnitureTrackingPixel && typeof window !== 'undefined' && window.document) {
