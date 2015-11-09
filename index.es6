@@ -68,7 +68,7 @@ export default class OminturePlugin {
       this.trackingObject,
       additionalTrackingProps
     );
-    console.log("Page view", newTrackingObject);
+    console.log("Pageview event", newTrackingObject);
     // `t` is Omniture's Track function.
     const omnitureTrackingPixel = newTrackingObject.t();
     if (omnitureTrackingPixel && typeof window !== 'undefined' && window.document) {
@@ -89,6 +89,7 @@ export default class OminturePlugin {
       );
       // `tl` is Omniture's TrackLink function.
       // TODO: linkType and linkName are mandatory, pls add a check.
+      console.log("Click event", newTrackingObject);
       newTrackingObject.tl(
         true,
         newTrackingObject.linkType,

@@ -26,7 +26,7 @@ import ReactI13nOmniture from './index';
 import DemoApp from './demoapp';
 import slug from 'slug';
 import User from '@economist/user';
-let user = new User();
+
 const TrackedApp = setupI13n(DemoApp, {
   rootModelData: {
     product: 'The World If',
@@ -97,8 +97,8 @@ const TrackedApp = setupI13n(DemoApp, {
         prop1: slug(nodeProps.product),
         prop4: slug(nodeProps.template),
         prop5: nodeProps.title,
-        prop11: user.isLoggedIn() ? "logged_in" : "not_logged_in",
-        prop12: user.isLoggedIn(),
+        prop11: User.isLoggedIn() ? "logged_in" : "not_logged_in",
+        prop12: User.isLoggedIn(),
         prop32: location.href,
       };
     },
