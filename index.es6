@@ -1,5 +1,4 @@
 import promisescript from 'promisescript';
-import assign from 'lodash.assign';
 
 export default class OminturePlugin {
 
@@ -27,7 +26,7 @@ export default class OminturePlugin {
         for (let i = 1; i < 50; ++i) {
           props['prop' + i] = '';
         }
-        this.trackingObject = assign(
+        this.trackingObject = Object.assign(
           window.s_gi(this.config.account),
           this.config.initialConfig
         );
@@ -42,7 +41,7 @@ export default class OminturePlugin {
     const eventHandler = this.config.eventHandlers[eventName];
     let props = {};
     if (payload && payload.i13nNode && payload.i13nNode.getMergedModel) {
-      props = assign(payload, payload.i13nNode.getMergedModel());
+      props = Object.assign(payload, payload.i13nNode.getMergedModel());
     }
     if (eventHandler) {
       return eventHandler(props);
@@ -64,7 +63,7 @@ export default class OminturePlugin {
   }
 
   track(additionalTrackingProps, callback) {
-    const newTrackingObject = assign(
+    const newTrackingObject = Object.assign(
       this.trackingObject,
       additionalTrackingProps
     );
@@ -83,7 +82,7 @@ export default class OminturePlugin {
 
   trackLink(additionalTrackingProps, callback) {
     return new Promise((resolve) => {
-      const newTrackingObject = assign(
+      const newTrackingObject = Object.assign(
         this.trackingObject,
         additionalTrackingProps
       );
