@@ -28,7 +28,7 @@ export default class OminturePlugin {
         }
         this.trackingObject = Object.assign(
           window.s_gi(this.config.account),
-          this.config.initialConfig
+          this.config.initialProps
         );
       }).catch(function(e) {
         console.error('An error loading or executing Omniture has occured: ', e.message);
@@ -40,6 +40,7 @@ export default class OminturePlugin {
   generatePayload(payload, eventName) {
     const eventHandler = this.config.eventHandlers[eventName];
     let props = {};
+
     if (payload && payload.i13nNode && payload.i13nNode.getMergedModel) {
       props = Object.assign(payload, payload.i13nNode.getMergedModel());
     }
@@ -67,6 +68,7 @@ export default class OminturePlugin {
       this.trackingObject,
       additionalTrackingProps
     );
+    console.log(newTrackingObject);
     // `t` is Omniture's Track function.
     const omnitureTrackingPixel = newTrackingObject.t();
     if (omnitureTrackingPixel && typeof window !== 'undefined' && window.document) {

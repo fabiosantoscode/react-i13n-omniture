@@ -29,6 +29,11 @@ export default class DemoApp extends React.Component {
       title: 'Title of the article',
       template: 'article',
       topic: 'Science',
+      publishDate: new Date(),
+      // This will overwrite the default
+      articleSource: 'web',
+      // TODO: Detect User ID
+      userID: 15,
     });
   }
 
