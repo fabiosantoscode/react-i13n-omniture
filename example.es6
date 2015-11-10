@@ -25,6 +25,23 @@ import { setupI13n } from 'react-i13n';
 import ReactI13nOmniture from './index';
 import DemoApp from './demoapp';
 import slug from 'slug';
+slug.defaults.mode ='pretty';
+slug.defaults.modes['rfc3986'] = {
+    replacement: '_',      // replace spaces with replacement
+    symbols: true,         // replace unicode symbols or not
+    remove: /[.]/g,
+    lower: true,           // result in lower case
+    charmap: slug.charmap, // replace special characters
+    multicharmap: slug.multicharmap // replace multi-characters
+};
+slug.defaults.modes['pretty'] = {
+    replacement: '_',
+    symbols: true,
+    remove: /[.]/g,
+    lower: true,
+    charmap: slug.charmap,
+    multicharmap: slug.multicharmap
+};
 import User from '@economist/user';
 
 const TrackedApp = setupI13n(DemoApp, {
