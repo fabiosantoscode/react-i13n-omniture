@@ -81,20 +81,30 @@ export default class OminturePlugin {
         this.trackingObject,
         additionalTrackingProps
       );
-      // `tl` is Omniture's TrackLink function.
-      // TODO: linkType and linkName are mandatory, pls add a check.
-      newTrackingObject.tl(
-        true,
-        newTrackingObject.linkType,
-        newTrackingObject.linkName,
-        newTrackingObject.variableOverrides,
-        () => {
-          if (callback) {
-            callback();
-          }
-          resolve();
-        },
-      );
+      // LinkType and linkName are mandatory.
+      if(!newTrackingObject.linkType || !newTrackingObject.linkName){
+        // Prevent errot for old browsers.
+        if(typeof console === "undefined") {
+          console = {
+              log: function() { },
+          };
+        }
+        console.log('LinkType and linkName are mandatory and should be provided.');
+      } else {
+        // `tl` is Omniture's TrackLink function.
+        newTrackingObject.tl(
+          true,
+          newTrackingObject.linkType,
+          newTrackingObject.linkName,
+          newTrackingObject.variableOverrides,
+          () => {
+            if (callback) {
+              callback();
+            }
+            resolve();
+          },
+        );
+      }
     });
   }
 
