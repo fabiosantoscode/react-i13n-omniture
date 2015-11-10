@@ -68,7 +68,6 @@ export default class OminturePlugin {
       this.trackingObject,
       additionalTrackingProps
     );
-    console.log(newTrackingObject);
     // `t` is Omniture's Track function.
     const omnitureTrackingPixel = newTrackingObject.t();
     if (omnitureTrackingPixel && typeof window !== 'undefined' && window.document) {
