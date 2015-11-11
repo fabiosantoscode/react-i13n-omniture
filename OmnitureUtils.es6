@@ -12,6 +12,13 @@ const OmnitureUtils = {
     // Expected output examples
     // "11:00AM"
     // "13:30PM"
+    //EST
+    // offset = -5.0
+    //
+    // clientDate = new Date();
+    // utc = clientDate.getTime() + (clientDate.getTimezoneOffset() * 60000);
+    //
+    // serverDate = new Date(utc + (3600000*offset));
     return '';
   },
   fullDate() {
