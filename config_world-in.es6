@@ -19,7 +19,7 @@ slug.defaults.modes['pretty'] = {
     multicharmap: slug.multicharmap
 };
 import User from '@economist/user';
-import OmnitureUtils from '../OmnitureUtils';
+import OmnitureUtils from './OmnitureUtils';
 
 const OmnitureConfig = {
   account: process.env.NODE_ENV === 'production' ? 'economistprod' : 'economistdev',
