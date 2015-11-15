@@ -5,7 +5,7 @@ const OmnitureUtils = {
   deviceDetection() {
     // TBD how we can manage this distinction
     // econofinal or econmobile
-    return 'econofinal';
+    return '';
   },
   hourOfTheDay() {
     // Returns the time of the event in EST time to the closest half hour.
