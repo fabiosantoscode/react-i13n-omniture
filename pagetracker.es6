@@ -24,11 +24,7 @@ export default function tracker(Component, config) {
         }
         pageInfo[currentValue] = newProp;
       });
-      console.log(pageInfo);
       reactI13n.execute('pageview', pageInfo );
-    },
-    handler() {
-
     },
     render() {
       return <Component {...this.props} />;
