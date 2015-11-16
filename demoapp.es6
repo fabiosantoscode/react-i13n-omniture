@@ -1,13 +1,19 @@
 /* eslint-disable id-match */
 import React from 'react';
 import { createI13nNode } from 'react-i13n';
-
+// Mockup data.
 const loggedin = 'logged_in';
 const today = new Date().toString();
 const I13nAnchor = createI13nNode('a', {
   isLeafNode: true,
   bindClickEvent: true,
   follow: true,
+});
+
+const I13nDiv = createI13nNode('div', {
+  isLeafNode: false,
+  bindClickEvent: false,
+  follow: false,
 });
 // Simulation of a basic App.
 export default class DemoApp extends React.Component {
@@ -20,29 +26,30 @@ export default class DemoApp extends React.Component {
 
   componentWillMount() {
     this.props.i13n.executeEvent('pageview', {
-      omnitureProps: {
-        pageName: 'the_world_if|blogs|DemocracyInAmerica',
-        server: 'economist.com',
-        channel: 'home',
-        prop1: 'the_world_if',
-        prop3: 'web',
-        prop4: 'blogs',
-        prop5: 'home',
-        prop11: loggedin,
-        prop13: 'anonymous',
-        prop31: today,
-      },
+      title: 'Title of the article',
+      template: 'article',
+      topic: 'Science',
+      publishDate: new Date(),
+      // This will overwrite the default
+      articleSource: 'web',
+      // TODO: Detect User ID
+      userID: 15,
     });
   }
 
   render() {
     return (
-      <I13nAnchor
-        href="#"
-        i13nModel={{ action: 'click', omnitureProps: {
-          pageName: 'ImJustALink',
-        } }}
-      >This is a link</I13nAnchor>
+      <I13nDiv
+        i13nModel={{ position: 'Inside a div' }}
+      >
+        <I13nAnchor
+          href="#"
+          i13nModel={{
+            action: 'click',
+            element: 'Go somewhere link',
+          }}
+        >Open the console and click me please.</I13nAnchor>
+      </I13nDiv>
     );
   }
 }
