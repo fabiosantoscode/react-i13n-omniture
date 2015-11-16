@@ -1,5 +1,4 @@
 import slug from 'slug';
-// import cookie from '@economist/cookie';
 
 slug.defaults.mode ='pretty';
 slug.defaults.modes['rfc3986'] = {
