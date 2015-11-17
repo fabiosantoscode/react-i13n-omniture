@@ -7,24 +7,38 @@ const OmnitureUtils = {
     // econofinal or econmobile
     return '';
   },
+  estFormatDate() {
+    // EST
+    const offset = -5.0
+    const clientDate = new Date();
+    const utc = clientDate.getTime() + (clientDate.getTimezoneOffset() * 60000);
+    const serverDate = new Date(utc + (3600000*offset));
+    return serverDate;
+  },
   hourOfTheDay() {
     // Returns the time of the event in EST time to the closest half hour.
     // Expected output examples
     // "11:00AM"
     // "13:30PM"
-    //EST
-    // offset = -5.0
-    //
-    // clientDate = new Date();
-    // utc = clientDate.getTime() + (clientDate.getTimezoneOffset() * 60000);
-    //
-    // serverDate = new Date(utc + (3600000*offset));
-    return '';
+    const date = this.estFormatDate();
+    const hours = date.getHours();
+    const minutes = (date.getMinutes()) < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+    let mid='AM';
+    if (hours>12) {
+     mid='pm';
+    }
+    return `${hours}:${minutes}${mid}`;
   },
   fullDate() {
     // Returns the date, day of week and weektype delimited by a pipe.
     // Expected outupt 27 october 2015|tuesday|weekday
-    return '';
+    const date = this.estFormatDate();
+    const weekDays = [ "sunday" , "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ];
+    const monthNames = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+    const day = weekDays[date.getDay()];
+    const month = monthNames[date.getMonth()];
+    const weekday = (date.getDay() === 0 || date.getDay() === 6 ) ? 'weekend' : 'weekday';
+    return [ `${date.getDate()} ${month} ${date.getFullYear()}` , day, weekday ].join('|');
   },
   userType() {
     // Returns the customer type and the product they have delimited using a pipe.
