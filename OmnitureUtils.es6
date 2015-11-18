@@ -22,7 +22,9 @@ const OmnitureUtils = {
     // "13:30PM"
     const date = this.estFormatDate();
     const hours = date.getHours();
-    const minutes = (date.getMinutes()) < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+    // Round minutes to 0 or 30.
+    let minutes = (Math.floor(date.getMinutes()/30) * 30);
+    minutes = (minutes) < 30 ? `0${minutes}` : minutes;
     let mid='AM';
     if (hours>12) {
      mid='pm';
