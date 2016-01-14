@@ -113,7 +113,7 @@
     "doc": "parallelshell 'npm run doc:html' 'npm run doc:js' 'npm run doc:css'",
     "doc:css": "cssnext --sourcemap example.css bundle.css",
     "doc:css:watch": "npm run doc:css -- --watch",
-    "doc:html": "npm-assets . && devpack-doc index standalone",
+    "doc:html": "devpack-doc index standalone",
     "doc:html:watch": "npm-watch",
     "doc:js": "npm run prepublish && browserify -d $npm_package_config_testbundle_opts",
     "doc:js:watch": "watchify $npm_package_config_testbundle_opts",
@@ -130,7 +130,7 @@
     "watch": "parallelshell 'npm run doc:watch' 'npm run prepublish:watch' 'npm run serve'"
   },
   "dependencies": {
-    "@economist/user": "^1.0.0",
+    "@economist/user": "umbobabo/user",
     "promisescript": "^1.1.0",
     "react-cookie": "^0.4.3"
   },
@@ -160,7 +160,8 @@
     "pre-commit": "^1.0.10",
     "react": "^0.14.0",
     "slug": "^0.9.1",
-    "watchify": "^3.4.0"
+    "watchify": "^3.4.0",
+    "react-cookie": "^0.4.3"
   },
   "peerDependencies": {
     "react": "^0.14.6",
