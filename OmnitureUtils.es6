@@ -56,7 +56,7 @@ const OmnitureUtils = {
     // Expected output
     // digital subscriber|ent-product-H,ent-product-A
     var user_sub_cookie = User.getSubscriberCookie();
-    if(User.isInternal()) {
+    if(User.isMultiUserLicense()) {
       return 'bulk-IP';
     } else if (typeof user_sub_cookie === 'undefined') {
       return 'anonymous';

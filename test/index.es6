@@ -76,15 +76,15 @@ describe('OmniturePlugin is a i13n plugin for Omniture', () => {
         it('it can read user subscription information if cookie exist', () => {
           const subscriberInformation = 'registered|ent-product-A*2011/02/16|2014/09/30|ent-product-A';
           cookie.save('ec_omniture_user_sub', subscriberInformation);
-          User.setInternal(false);
+          User.setMultiUserLicense(false);
           OmnitureUtils.userSubscription().should.equal(subscriberInformation.split('*')[0]);
         });
         it('it return anonymous if user subscription cookie is not present', () => {
           cookie.remove('ec_omniture_user_sub');
           OmnitureUtils.userSubscription().should.equal('anonymous');
         });
-        it('it return bulk-IP if user is internal', () => {
-          User.setInternal();
+        it('it return bulk-IP if user is MUL', () => {
+          User.setMultiUserLicense();
           OmnitureUtils.userSubscription().should.equal('bulk-IP');
         });
       });
@@ -103,7 +103,7 @@ describe('OmniturePlugin is a i13n plugin for Omniture', () => {
         it('it return EXPIRED if there is a subscription expired', () => {
           const subscriberInformation = 'registered|ent-product-A*2011/02/16|2011/09/30|ent-product-A';
           cookie.save('ec_omniture_user_sub', subscriberInformation);
-          User.setInternal(false);
+          User.setMultiUserLicense(false);
           OmnitureUtils.subscriptionRemaningMonths().should.equal('EXPIRED');
         });
         it('it return Less_than_1_MO if the subscription is due to expire', () => {
@@ -115,7 +115,7 @@ describe('OmniturePlugin is a i13n plugin for Omniture', () => {
           const expiresDate = `${now.getFullYear()}/${month}/${tomorrow}`;
           const subscriberInformation = `registered|ent-product-A*2011/02/16|${expiresDate}|ent-product-A`;
           cookie.save('ec_omniture_user_sub', subscriberInformation);
-          User.setInternal(false);
+          User.setMultiUserLicense(false);
           OmnitureUtils.subscriptionRemaningMonths().should.equal('Less_than_1_MO');
         });
         it('it return <numberOfRemaningMonths>MO if more than 1 month is remaining', () => {
@@ -127,12 +127,12 @@ describe('OmniturePlugin is a i13n plugin for Omniture', () => {
           const expiresDate = `${now.getFullYear()}/${month}/${tomorrow}`;
           const subscriberInformation = `registered|ent-product-A*2011/02/16|${expiresDate}|ent-product-A`;
           cookie.save('ec_omniture_user_sub', subscriberInformation);
-          User.setInternal(false);
+          User.setMultiUserLicense(false);
           OmnitureUtils.subscriptionRemaningMonths().should.equal('2MO');
         });
         it('it return empty string if no information is available', () => {
           cookie.remove('ec_omniture_user_sub');
-          User.setInternal(false);
+          User.setMultiUserLicense(false);
           OmnitureUtils.subscriptionRemaningMonths().should.equal('');
         });
       });
