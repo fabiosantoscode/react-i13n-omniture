@@ -62,7 +62,7 @@ const OmnitureUtils = {
       return 'anonymous';
     } else {
       const ec_omniture_user_sub_info = user_sub_cookie.split('*');
-      if (ec_omniture_user_sub_info !== 'undefined') {
+      if (ec_omniture_user_sub_info !== undefined) {
         // Prop13 gets the first bit, which is a | delimited list of entitlements.
         return ec_omniture_user_sub_info[0];
       } else {
