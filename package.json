@@ -132,8 +132,7 @@
   "dependencies": {
     "@economist/user": "^2.0.0",
     "promisescript": "^1.1.0",
-    "react-cookie": "^0.4.3",
-    "slugger": "^1.0.1"
+    "react-cookie": "^0.4.3"
   },
   "devDependencies": {
     "@economist/component-devpack": "^3.6.1",
@@ -164,6 +163,7 @@
     "react": "^0.14.0",
     "react-cookie": "^0.4.3",
     "slug": "^0.9.1",
+    "slugger": "^1.0.1",
     "watchify": "^3.4.0"
   },
   "peerDependencies": {
