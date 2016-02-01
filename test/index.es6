@@ -6,7 +6,7 @@ import User from '@economist/user';
 
 chai.use(spies);
 
-const plugin = new ReactI13nOmniture({
+const pluginConfig = {
   account: process.env.NODE_ENV === 'production' ? 'economistprod' : 'economistdev',
   initialConfig: {
     visitorNamespace: 'economist',
@@ -50,12 +50,21 @@ const plugin = new ReactI13nOmniture({
       };
     },
   },
-});
+};
+const plugin = new ReactI13nOmniture(pluginConfig);
 
 describe('OmniturePlugin is a i13n plugin for Omniture', () => {
   it('it is a class and produce instances', () => {
     ReactI13nOmniture.name.should.equal('OminturePlugin');
     plugin.should.be.an.instanceof(ReactI13nOmniture);
+  });
+  describe('ensureScriptHasLoaded', () => {
+    it('calls loadExternalScript if it was passed', () => {
+      const loadExternalScript = chai.spy(() => Promise.resolve());
+      const plugin = new ReactI13nOmniture({ ...pluginConfig, loadExternalScript });
+      plugin.ensureScriptHasLoaded();
+      loadExternalScript.should.have.been.called.once();
+    });
   });
   describe('it provides events interfaces', () => {
     describe('pageview event interface', () => {

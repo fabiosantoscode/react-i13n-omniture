@@ -15,10 +15,13 @@ export default class OminturePlugin {
 
   ensureScriptHasLoaded() {
     if (!this.script) {
-      this.script = promisescript({
-        url: this.config.externalScript,
-        type: 'script',
-      }).then(() => {
+      const pOmniture = this.config.loadExternalScript ?
+        this.config.loadExternalScript() :
+        promisescript({
+          url: this.config.externalScript,
+          type: 'script',
+        });
+      this.script = pOmniture.then(() => {
         if (typeof window === 'undefined' || !window.s_gi) {
           return false;
         }
