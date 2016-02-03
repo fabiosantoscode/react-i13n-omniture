@@ -54,10 +54,6 @@ const pluginConfig = {
 const plugin = new ReactI13nOmniture(pluginConfig);
 
 describe('OmniturePlugin is a i13n plugin for Omniture', () => {
-  it('it is a class and produce instances', () => {
-    ReactI13nOmniture.name.should.equal('OminturePlugin');
-    plugin.should.be.an.instanceof(ReactI13nOmniture);
-  });
   describe('ensureScriptHasLoaded', () => {
     it('calls loadExternalScript if it was passed', () => {
       const loadExternalScript = chai.spy(() => Promise.resolve());
